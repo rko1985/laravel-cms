@@ -18,6 +18,7 @@
                 <thead>
                     <th>Image</th>
                     <th>Title</th>
+                    <th>Category</th>
                     <th></th>
                     <th></th>
                 </thead>
@@ -26,6 +27,11 @@
                             <tr>
                                 <td><img src="{{asset('/storage/'.$post->image)}}" width="60px"></td>
                                 <td>{{$post->title}}</td>
+                                <td>
+                                    <a href="{{route('categories.edit', $post->category->id)}}">
+                                        {{$post->category->name}}
+                                    </a>                                     
+                                </td>
                                 
                                 @if($post->trashed())
                                     <td>

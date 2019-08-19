@@ -6,10 +6,18 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Posts\CreatePostsRequest;
 use App\Post;
+use App\Category;
 use App\Http\Requests\Posts\UpdatePostRequest;
 
 class PostsController extends Controller
 {
+    public function __construct(){
+
+        session()->flash('error', 'You need categories to be able to create a post.');
+
+        $this->middleware('verifyCategoriesCount')->only(['create', 'store']);
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +36,7 @@ class PostsController extends Controller
     public function create()
     {
         
-        return view('posts.create');
+        return view('posts.create')->with('categories', Category::all());
         
 
     }
@@ -51,7 +59,8 @@ class PostsController extends Controller
             'description' => $request->description,
             'content' => $request->content,
             'image' => $image,
-            'published_at' => $request->published_at
+            'published_at' => $request->published_at,
+            'category_id'  =>$request->category
         ]);
 
         //flash a message
@@ -80,7 +89,7 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.create')->with('post', $post);
+        return view('posts.create')->with('post', $post)->with('categories', Category::all());
     }
 
     /**
@@ -146,7 +155,7 @@ class PostsController extends Controller
     }
 
     public function restore($id){
-        
+
         $post = Post::withTrashed()->where('id', $id)->firstOrFail();
         $post->restore();
         session()->flash('success', 'Post restored successfully.');

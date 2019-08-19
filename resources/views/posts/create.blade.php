@@ -13,7 +13,7 @@
         @if(isset($post))
             @method('PUT')
         @endif
-        
+
         <div class="form-group">
             <label for="title">Title</label>
         <input type="text" class="form-control" name="title" id="title" value="{{ isset($post) ? $post->title : ''}}">
@@ -42,8 +42,24 @@
             <label for="image">Image</label>
             <input type="file" class="form-control" name="image" id="image">
         </div>
+
         <div class="form-group">
-        <button type="submit" class="btn btn-success">{{isset($post) ? 'Update Post' : 'Create Post'}}</button>
+            <label for="category">Category</label>
+            <select name="category" id="category" class="form-control">
+                @foreach($categories as $category)
+                    <option value="{{$category->id}}"
+                        @if(isset($post))
+                            @if($category->id == $post->category_id) 
+                                selected 
+                            @endif
+                        @endif
+                        >{{$category->name}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">{{isset($post) ? 'Update Post' : 'Create Post'}}</button>
         </div>
 
 
