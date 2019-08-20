@@ -31,4 +31,14 @@ class Post extends Model
     public function category(){
         return $this->belongsTo(Category::class);
     }
+
+    //tags plural because it can have more than one tag
+    public function tags(){
+        return $this->belongsToMany(Tag::class);
+    }
+
+    //checks if post has tag
+    public function hasTag($tagId){
+        return in_array($tagId, $this->tags->pluck('id')->toArray());
+    }
 }

@@ -10,4 +10,11 @@ class Tag extends Model
     protected $fillable = [
         'name'
     ];
+
+
+    //defining relationship
+    //many to many, (same as Post model)
+    public function posts(){
+        return $this->belongsToMany(Post::class);
+    }
 }

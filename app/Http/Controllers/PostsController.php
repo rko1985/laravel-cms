@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Posts\CreatePostsRequest;
 use App\Post;
 use App\Category;
+use App\Tag;
 use App\Http\Requests\Posts\UpdatePostRequest;
 
 class PostsController extends Controller
@@ -35,7 +36,7 @@ class PostsController extends Controller
     public function create()
     {
         
-        return view('posts.create')->with('categories', Category::all());
+        return view('posts.create')->with('categories', Category::all())->with('tags', Tag::all());
         
 
     }
@@ -48,11 +49,12 @@ class PostsController extends Controller
      */
     public function store(CreatePostsRequest $request)
     {
+
         //upload the image
         $image = $request->image->store('posts');
 
         //create the post
-        Post::create([
+        $post = Post::create([
 
             'title' => $request->title,
             'description' => $request->description,
@@ -61,6 +63,11 @@ class PostsController extends Controller
             'published_at' => $request->published_at,
             'category_id'  =>$request->category
         ]);
+
+        if($request->tags){ //if tags exists
+            //many to many relationship
+            $post->tags()->attach($request->tags); //attach tags with posts and store to DB
+        }
 
         //flash a message
         session()->flash('success', 'Post created successfully.');
@@ -88,7 +95,7 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.create')->with('post', $post)->with('categories', Category::all());
+        return view('posts.create')->with('post', $post)->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -111,6 +118,10 @@ class PostsController extends Controller
             $post->deleteImage(); //custom function we made in Post model
 
             $data['image'] = $image;
+        }
+
+        if($request->tags){
+            $post->tags()->sync($request->tags);
         }
 
         //update attributes
