@@ -13,7 +13,6 @@ class PostsController extends Controller
 {
     public function __construct(){
 
-        session()->flash('error', 'You need categories to be able to create a post.');
 
         $this->middleware('verifyCategoriesCount')->only(['create', 'store']);
 
