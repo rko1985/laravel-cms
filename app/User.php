@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'about'
     ];
 
     /**
@@ -39,6 +39,10 @@ class User extends Authenticatable
 
     public function isAdmin(){
         return $this->role == 'admin'; //checks if current user role is admin? is it true?
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class);
     }
     
 }

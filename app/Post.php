@@ -17,6 +17,7 @@ class Post extends Model
         'description',
         'content',
         'image',
+        'user_id',
         'published_at',
         'category_id'
     ];
@@ -40,5 +41,9 @@ class Post extends Model
     //checks if post has tag
     public function hasTag($tagId){
         return in_array($tagId, $this->tags->pluck('id')->toArray());
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }
